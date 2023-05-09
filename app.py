@@ -1,3 +1,7 @@
+import os
+from os.path import join, dirname
+from dotenv import load_dotenv
+
 from flask import (
     Flask,
     request,
@@ -13,11 +17,14 @@ from bson import ObjectId
 
 app=Flask(__name__)
 
-password = '123'
-cxn_str= f'mongodb+srv://user1:{password}@cluster0.g1iutgc.mongodb.net/?retryWrites=true&w=majority'
-client = MongoClient(cxn_str)
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
 
-db = client.chapter10
+MONGODB_URI = os.environ.get("MONGODB_URI")
+DB_NAME =  os.environ.get("DB_NAME")
+
+client = MongoClient(MONGODB_URI)
+db = client[DB_NAME]
 
 @app.route('/')
 def main():
