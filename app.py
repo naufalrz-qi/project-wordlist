@@ -38,9 +38,8 @@ def main():
 def error():
     msg= request.args.get('msg')
     suggestions= request.args.get('suggestions')
-    suggests = suggestions.split(',')
-    print(suggests)
-    return render_template('error.html', msg=msg, suggests=suggests)
+    items = suggestions.split(',')
+    return render_template('error.html', msg=msg, items=items)
 
 @app.route('/detail/<keyword>')
 def detail(keyword):

@@ -24,8 +24,8 @@
 
                    <p>{{ msg }}</p>
 
-                   {% for item in suggests %}
-                        <a class="btn btn-danger my-1" href="/detail/{{ item }}">{{ item }}</a>
+                   {% for item in items %}
+                        <a class="btn btn-primary m-2" href="/detail/{{ item }}">{{ item }}</a>
                    {% endfor %}
                 
                 {% endif %}
