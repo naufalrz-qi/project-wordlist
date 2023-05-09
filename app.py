@@ -38,8 +38,11 @@ def main():
 def error():
     msg= request.args.get('msg')
     suggestions= request.args.get('suggestions')
-    items = suggestions.split(',')
-    return render_template('error.html', msg=msg, items=items)
+    if type(suggestions) is str:
+        items = suggestions.split(',')
+        return render_template('error.html', msg=msg, items=items)
+    else:
+         return render_template('error.html', msg=msg)
 
 @app.route('/detail/<keyword>')
 def detail(keyword):
@@ -97,6 +100,42 @@ def delete_word():
         'result':'success',
         'msg':f'The word,{word}, was deleted'
     })
+    
+@app.route('/api/get_exs', methods=['GET'])
+def get_exs():
+    word = request.args.get['word']
+    example_data = db.examples.find({'word':word})
+    examples = []
+    
+    for example in example_data:
+        examples.append({
+            'example':example.get('example'),
+            'id':str(example.get('_id')),
+        })
+    
+    return jsonify({
+        'result': 'success',
+        'examples':examples
+        })
+
+@app.route('/api/save_ex', methods=['POST'])
+def save_ex():
+    word = request.form.get('word')
+    example = request.form.get('example')
+    doc = {
+        'word' : word,
+        'example':example
+    }
+    db.examples.insert_one(doc)
+    return jsonify({
+        'result': 'success',
+        'msg':f'Your example, {example}, for the word, {word}, was saved'
+        })
+
+
+@app.route('/api/delete_ex', methods=['POST'])
+def delete_ex():
+    return jsonify({'result': 'success'})
 
 if __name__=="__main__":
-    app.run('localhost', port=5000, debug=True)
+    app.run('0.0.0.0', port=5000, debug=True)
